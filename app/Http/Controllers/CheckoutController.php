@@ -24,7 +24,8 @@ class CheckoutController extends Controller
 
     public function proccess()
     {
-        $json = (new MercadoPago)->proccess(request()->all());
+        $item = Item::find(request('item'));
+        $json = (new MercadoPago)->proccess(request()->collect()->put('description', $item['description']));
 
         return response()->json($json);
     }

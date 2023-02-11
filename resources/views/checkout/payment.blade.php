@@ -16,5 +16,5 @@
 
     <div id="paymentBrick_container"></div>
 
-    <x-brick email="{{ $email }}" amount="{{ $item['value'] }}"/>
+    <x-brick email="{{ $email }}" amount="{{ $item['value'] }}" id="{{ $item['id'] }}"/>
 </x-layout.main>

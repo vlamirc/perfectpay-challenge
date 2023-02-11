@@ -24,7 +24,7 @@
                     onSubmit: ({ selectedPaymentMethod, formData }) => {
                         console.log(formData);
                         return new Promise((resolve, reject) => {
-                            fetch("{{ route('checkout.proccess') }}", {
+                            fetch("{{ route('checkout.proccess', ['item' => $id]) }}", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",
