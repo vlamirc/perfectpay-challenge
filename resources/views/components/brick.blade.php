@@ -58,6 +58,5 @@
         };
 
         renderPaymentBrick(bricksBuilder);
-
     </script>
 @endpush
