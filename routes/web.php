@@ -24,6 +24,7 @@ Route::controller(CheckoutController::class)
         ->group(
             function () {
                 Route::get('/form', 'form')->name('form');
-                Route::get('/congratulation', 'congratulation')->name('congratulation');
+                Route::post('/send', 'send')->name('send');
+                Route::get('/thanks', 'thanks')->name('thanks');
             }
         );

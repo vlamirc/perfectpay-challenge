@@ -11,8 +11,15 @@ class CheckoutController extends Controller
         return view('checkout.form');
     }
 
-    public function congratulation()
+    public function send()
     {
-        return view('checkout.congratulation');
+        dump(request()->all());
+
+        return redirect()->route('checkout.thanks');
+    }
+
+    public function thanks()
+    {
+        return view('checkout.thanks');
     }
 }
