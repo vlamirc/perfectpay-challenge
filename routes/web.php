@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('checkout.form');
 });
+
+Route::controller(CheckoutController::class)
+        ->name('checkout.')
+        ->prefix('checkout')
+        ->group(
+            function () {
+                Route::get('/form', 'form')->name('form');
+                Route::get('/congratulation', 'congratulation')->name('congratulation');
+            }
+        );
