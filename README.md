@@ -30,6 +30,51 @@ e um botão 'finalizar pagamento', e se o pagamento der certo direcionar para um
 - utilizar a biblioteca PHP desenvolvida pelo Mercado Pago
   - https://www.mercadopago.com.br/developers/pt/guides/sdks/official/php/
 
+
+### Instalação
+
+- clonar o repositório
+- entrar no diretório da aplicação
+- executar o comando abaixo para criação do ambiente **Sail**
+> https://laravel.com/docs/9.x/sail#installing-composer-dependencies-for-existing-projects
+
+```shell
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v $(pwd):/var/www/html \
+    -w /var/www/html \
+    laravelsail/php81-composer:latest \
+    composer install --ignore-platform-reqs
+```
+
+- criar o **.env**
+```
+cp .env.example .env
+```
+
+- editar o **.env** e ajustar as seguintes variáveis
+```
+MP_PUBLIC_KEY=
+MP_ACCESS_TOKEN=
+```
+
+- executar a aplicação
+```shell
+sail up -d
+```
+
+- gerar a **APP_KEY**
+```
+sail art key:generate
+```
+
+- para testar a aplicação utilizar os cartões de teste e status de pagamentos do link abaixo
+
+https://www.mercadopago.com.br/developers/pt/docs/checkout-api/integration-test/test-cards
+
+
+--------------------------
+
 ### Problemas Encontrados com a SDK do Mercado Livre
 > Devido a problemas no código fonte do SDK, o comando "composer install" apresenta vários _warnings_
 
@@ -46,3 +91,4 @@ e um botão 'finalizar pagamento', e se o pagamento der certo direcionar para um
     - Warnings no Composer - PSR4
   - https://github.com/mercadopago/sdk-php/discussions/352
     - Integração com Laravel?
+- Foi necessário fazer downgrade do PHP para versão 8.0 para que o SDK funcionasse adequadamente
