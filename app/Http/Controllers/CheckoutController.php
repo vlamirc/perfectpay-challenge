@@ -2,42 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use MercadoPago\Payment;
-use MercadoPago\SDK;
+use App\Lib\MercadoPago;
+use App\Models\Item;
 
 class CheckoutController extends Controller
 {
-    public function form()
+    public function cart()
     {
-        return view('checkout.form');
+        $items = Item::all();
+
+        return view('checkout.cart', compact('items'));
     }
 
-    public function send()
+    public function payment()
     {
-        dump(request()->all());
+        $item = Item::find(request('item'));
+        $email = request('email');
 
-        SDK::setAccessToken(config('app.mp_access_token'));
-
-        $payment = new Payment();
-
-        $payment->description = request('productDescription');
-        $payment->transaction_amount = request('productValue');
-        $payment->installments = 1;
-        // $payment->token = "YOUR_CARD_TOKEN";
-        $payment->payment_method_id = "visa";
-        $payment->payer = array(
-          "email" => request('email')
-        );
-
-        $payment->save();
-
-        dd(config('app.mp_public_key'), config('app.mp_access_token'), $payment, $payment->status);
-
-        return redirect()->route('checkout.thanks');
+        return view('checkout.payment', compact('item', 'email'));
     }
 
-    public function thanks()
+    public function proccess()
     {
-        return view('checkout.thanks');
+        $json = (new MercadoPago)->proccess(request()->all());
+
+        return response()->json($json);
+    }
+
+    public function status()
+    {
+        $id = request('id');
+
+        return view('checkout.status', compact('id'));
     }
 }

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect()->route('checkout.form');
+    return redirect()->route('checkout.cart');
 });
 
 Route::controller(CheckoutController::class)
@@ -23,8 +23,9 @@ Route::controller(CheckoutController::class)
         ->prefix('checkout')
         ->group(
             function () {
-                Route::get('/form', 'form')->name('form');
-                Route::post('/send', 'send')->name('send');
-                Route::get('/thanks', 'thanks')->name('thanks');
+                Route::get('/cart', 'cart')->name('cart');
+                Route::post('/payment', 'payment')->name('payment');
+                Route::post('/proccess', 'proccess')->name('proccess');
+                Route::get('/status', 'status')->name('status');
             }
         );
