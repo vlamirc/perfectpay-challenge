@@ -3,9 +3,8 @@
 namespace App\Lib;
 
 use Illuminate\Support\Collection;
-use MercadoPago\Payer;
-use MercadoPago\Payment;
-use MercadoPago\SDK;
+use MercadoPago\Client\Payment\PaymentClient;
+use MercadoPago\MercadoPagoConfig;
 
 class MercadoPago
 {
@@ -22,49 +21,49 @@ class MercadoPago
 
     private function creditCard(Collection $payload)
     {
-        SDK::setAccessToken(config('app.mp_access_token'));
+        MercadoPagoConfig::setAccessToken(config('app.mp_access_token'));
 
-        $payment = new Payment();
+        $client = new PaymentClient();
 
-        $payment->transaction_amount = $payload['transaction_amount'];
-        $payment->token = $payload['token'];
-        $payment->installments = $payload['installments'];
-        $payment->payment_method_id = $payload['payment_method_id'];
-        $payment->issuer_id = $payload['issuer_id'];
-        $payer = new Payer();
-        $payer->email = $payload['payer']['email'];
-        $payer->identification = [
-           'type' => $payload['payer']['identification']['type'],
-           'number' => $payload['payer']['identification']['number'],
-        ];
-        $payment->payer = $payer;
-
-        $payment->save();
+        $payment = $client->create([
+            'transaction_amount' => $payload['transaction_amount'],
+            'token'              => $payload['token'],
+            'installments'       => $payload['installments'],
+            'payment_method_id'  => $payload['payment_method_id'],
+            'issuer_id'          => $payload['issuer_id'],
+            'payer'              => [
+                'email'          => $payload['payer']['email'],
+                'identification' => [
+                    'type'   => $payload['payer']['identification']['type'],
+                    'number' => $payload['payer']['identification']['number'],
+                ],
+            ],
+        ]);
 
         return [
-           'status' => $payment->status,
-           'status_detail' => $payment->status_detail,
-           'id' => $payment->id
+            'status'        => $payment->status,
+            'status_detail' => $payment->status_detail,
+            'id'            => $payment->id,
         ];
     }
 
     private function boleto(Collection $payload)
     {
-        SDK::setAccessToken(config('app.mp_access_token'));
+        MercadoPagoConfig::setAccessToken(config('app.mp_access_token'));
 
-        $payment = new Payment();
+        $client = new PaymentClient();
 
-        $payment->transaction_amount = $payload['transaction_amount'];
-        $payment->payment_method_id = $payload['payment_method_id'];
-        $payment->description = $payload['description'];
-        $payment->payer = $payload['payer'];
-
-        $payment->save();
+        $payment = $client->create([
+            'transaction_amount' => $payload['transaction_amount'],
+            'payment_method_id'  => $payload['payment_method_id'],
+            'description'        => $payload['description'],
+            'payer'              => $payload['payer'],
+        ]);
 
         return [
-           'status' => $payment->status,
-           'status_detail' => $payment->status_detail,
-           'id' => $payment->id
+            'status'        => $payment->status,
+            'status_detail' => $payment->status_detail,
+            'id'            => $payment->id,
         ];
     }
 }
